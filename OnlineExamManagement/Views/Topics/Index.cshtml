@@ -1,0 +1,42 @@
+﻿@model IEnumerable<OnlineExamManagement.Models.Db.Topics>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TopicsName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubjectCodeNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TopicsName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubjectCodeNavigation.SubjectCode)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TopicsCode">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TopicsCode">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TopicsCode">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

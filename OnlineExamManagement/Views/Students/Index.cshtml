@@ -1,0 +1,77 @@
+﻿@model IEnumerable<OnlineExamManagement.Models.Db.Students>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StudentId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudentName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Class)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Father)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Picture)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudentName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Class)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Father)
+            </td>
+
+            <td>
+                @if (item.Picture != null && System.IO.File.Exists(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "images\\" + item.Picture)))
+                {
+                    <img src="~/Images/@Html.DisplayFor(modelItem => item.Picture)" alt="@item.StudentId"
+                         width="100" class="img-responsive" />
+                    <br />
+                    @Html.ActionLink("Change Picture", "UploadFile", new { id = item.StudentId })
+                }
+                else
+                {
+                    <img src="~/Images/cross.jpg" alt="No Image" width="100" class="img-responsive" />
+                    <br />
+                    @Html.ActionLink("Upload Picture", "UploadFile", new { id = item.StudentId })
+                }
+
+            </td>
+
+
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.StudentId">Edit<i class="fa fa-edit" style="font-size:20px;color:red"></i> </a> |
+                <a asp-action="Details" asp-route-id="@item.StudentId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.StudentId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

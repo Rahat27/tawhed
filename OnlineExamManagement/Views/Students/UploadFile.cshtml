@@ -1,0 +1,146 @@
+﻿@model OnlineExamManagement.Models.Db.Students
+
+@{
+    ViewData["Title"] = "UploadFile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+
+    .thumb-img {
+        object-fit: cover;
+        overflow: hidden;
+        height: 20vw;
+        width: 20vw;
+    }
+</style>
+
+<h2>UploadFile</h2>
+
+<div>
+    <h4>Students</h4>
+    <hr />
+
+    <dl class="dl-horizontal">
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StudentName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StudentName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StudentId)
+        </dt>
+        <dd>
+            <div id="icode">@Html.DisplayFor(model => model.StudentId)</div>
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Class)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Class)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Father)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Father)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Picture)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Picture)
+        </dd>
+
+    </dl>
+
+</div>
+
+<hr />
+
+@using (Html.BeginForm("UploadFile", "Students", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.TextBox("file", "", new { type = "file" })
+    <input type="submit" value="Upload" />
+}
+
+
+<div class="row">
+    @foreach (var item in ViewBag.pictures)
+    {
+        <div class="col-lg-2 col-sm-2">
+
+            @if (item.Picturepath == ViewBag.apath)
+            {
+                <img class="img-responsive thumb-img" alt="@item.Picturepath" src="~/images/@item.Picturepath" />
+                <br />
+                <div class="label-primary act" style="text-align:center">Activated</div>
+            }
+            else
+            {
+                <img class="img-responsive thumb-img" alt="@item.Picturepath" src="~/images/@item.Picturepath" />
+                <br />
+                <div class="act btn btn-success" style="text-align:center">Activate It</div>
+            }
+
+        </div>
+
+
+    }
+
+</div>
+<hr />
+
+Active Picture: @ViewData["apath"]
+
+
+
+<script type="text/javascript">
+
+    $(function () {
+        $(".act").click(function () {
+            id1 = $("#icode").text();
+            // alert($(this).text());
+            $(this).text('Activated');
+            $(this).attr("class", "btn-primary act");
+            // $(this).attr("cursor", "text");
+
+            $('.act').not(this).html("Activate It").attr("class", 'act btn btn-success');//.attr("class","pointer");
+
+            path = $(this).parent().children((':first-child')).attr("alt");
+            qs = "id=" + id1 + "&path=" + path;
+
+            $.ajax({
+                type: "POST",
+                url: "/students/ActivatePicture?" + qs,
+                dataType: "json",
+                contentType: "application/json",
+                success: function (data) {
+                    //alert("Picture Activated Successfully");
+                    //$(this).content('Activated');
+
+                    /*
+
+                    $('.collapsiblock').not(this).each(function () {
+                        $(this).slideUp();
+                    });
+                    */
+
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        });
+
+    })
+
+
+</script>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.StudentId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
